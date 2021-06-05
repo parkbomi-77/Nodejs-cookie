@@ -14,10 +14,10 @@ function authIsOwner(request, response) {
     cookies = cookie.parse(request.headers.cookie);
 
   }
-  if (cookies.email === 'pak@gamil.com' && post.password === '111111') {
-    inOwner = true;
+  if (cookies.email === 'pak@gamil.com' && cookies.password === '111111') {
+    isOwner = true;
   }
-  return inOwner;
+  return isOwner;
 }
 
 function authStatusUI(request, response) {
@@ -181,7 +181,7 @@ var app = http.createServer(function(request,response){
       });
       request.on('end', function () {
         var post = qs.parse(body);
-        if (post.email === 'pak@gamil.com' && post.password ==='111111') {
+        if (post.email === 'pak@gamil.com' && post.password === '111111') {
           response.writeHead(302, {
             'Set-cookie': [
               `email = ${post.email}`,
@@ -190,10 +190,25 @@ var app = http.createServer(function(request,response){
             ],
             Location: `/`
           });
-          response.end();
-        } else {
-          response.end('who?');
         }
+        response.end();
+         });
+        }else if (pathname === '/logout_process') {
+      var body = '';
+      request.on('data', function (data) {
+        body = body + data;
+      });
+      request.on('end', function () {
+        var post = qs.parse(body);
+          response.writeHead(302, {
+            'Set-cookie': [
+              `email =; Max-Age=0`,
+              `password =; Max-Age=0`,
+              'nickname =; Max-Age=0'
+            ],
+            Location: `/`
+          });
+          response.end();
       });
     } else {
       response.writeHead(404);
